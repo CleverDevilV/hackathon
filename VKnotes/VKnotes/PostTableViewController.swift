@@ -70,15 +70,35 @@ class PostTableViewController: UIViewController, UITableViewDataSource, UITableV
 			
 			guard let text = textField.text else { return }
 			
-			let note = Note(title: text, url: "url0", isPicked: false)
+			let insertNemeOfPost = UIAlertController(title: "Введите имя вашего поста", message: nil, preferredStyle: .alert)
 			
-			self.postsInCategories.append(note)
+			insertNemeOfPost.addTextField(configurationHandler: nil)
 			
-			let t = AppDelegate.shared.categories[self.index].notes![""]
-			let noteForUpload = ["note\(self.postsInCategories.count - 1)" : note]
-			let p = AppDelegate.shared.categories[self.index].notes![""]
-			let posts = (AppDelegate.shared.categories[self.index].notes)?["note\(self.postsInCategories.count - 1)"]
-			self.loadToServer()
+			let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+			
+			let okAction = UIAlertAction(title: "OK", style: .default) {
+				_ in
+				
+				let textField2 = insertNemeOfPost.textFields![0] as UITextField
+				
+				guard let text2 = textField2.text else { return }
+				
+				let note = Note(title: text2, url: text, isPicked: false)
+				
+				self.postsInCategories.append(note)
+				
+//				let t = AppDelegate.shared.categories[self.index].notes![""]
+//				let noteForUpload = ["note\(self.postsInCategories.count - 1)" : note]
+//				let p = AppDelegate.shared.categories[self.index].notes![""]
+//				let posts = (AppDelegate.shared.categories[self.index].notes)?["note\(self.postsInCategories.count - 1)"]
+				self.loadToServer()
+				self.tableView.reloadData()
+			}
+			
+			insertNemeOfPost.addAction(cancelAction)
+			insertNemeOfPost.addAction(okAction)
+			
+			self.present(insertNemeOfPost, animated: true, completion: nil)
 		}
 		
 		addTaskAllert.addAction(cancelAction)
