@@ -86,11 +86,12 @@ class PostTableViewController: UIViewController, UITableViewDataSource, UITableV
 				let note = Note(title: text2, url: text, isPicked: false)
 				
 				self.postsInCategories.append(note)
+				print(self.postsInCategories)
 				
-//				let t = AppDelegate.shared.categories[self.index].notes![""]
-//				let noteForUpload = ["note\(self.postsInCategories.count - 1)" : note]
-//				let p = AppDelegate.shared.categories[self.index].notes![""]
-//				let posts = (AppDelegate.shared.categories[self.index].notes)?["note\(self.postsInCategories.count - 1)"]
+//				AppDelegate.shared.categories[0].notes!["note\(self.postsInCategories.count)"] = note
+				
+//				let t = AppDelegate.shared.categories[self.index].notes?["note\(self.postsInCategories.count)"]
+				
 				self.loadToServer()
 				self.tableView.reloadData()
 			}
@@ -108,8 +109,8 @@ class PostTableViewController: UIViewController, UITableViewDataSource, UITableV
 	}
 	
 	func loadToServer() {
-		let posts = AppDelegate.shared.categories
-		uploadPosts(posts) {
+		let cat = AppDelegate.shared.categories
+		uploadPosts(cat) {
 			result in
 			if result {
 				DispatchQueue.main.async {

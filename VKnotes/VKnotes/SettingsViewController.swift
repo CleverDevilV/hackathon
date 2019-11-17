@@ -28,9 +28,29 @@ class SettingsViewController: UIViewController {
     
     @objc
     func logOutS() {
-     //   WebCacheCleaner.clean()
+        
+        WebCacheCleaner.clean()
+        
+        
+            let config = URLSessionConfiguration.default
+            let session = URLSession(configuration: config)
+            
+        let url = URL(string: "https://api.vk.com/oauth/logout")!
+            let urlRequest = URLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 120)
+            
+            let task = session.dataTask(with: urlRequest, completionHandler: {(data, response, error) in
+                do {
+                    print (data as Any)
+                } catch {
+                    print(error)
+                }
+            })
+            task.resume()
+        
         AppDelegate.defaults.set(false, forKey: "loggedIn")
         AppDelegate.shared.rootViewController.switchToLogout()
+        
+        
     }
     
     
