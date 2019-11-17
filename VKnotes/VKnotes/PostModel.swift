@@ -8,18 +8,19 @@
 
 import UIKit
 
-class PostModel {
-    static var shared: PostModel = {
-        let instance = PostModel()
-        
-        return instance
-    }()
-    public var posts: [Post] = []
-    public var isPicked: Bool = false
-}
+//class PostModel {
+//    static var shared: PostModel = {
+//        let instance = PostModel()
+//
+//        return instance
+//    }()
+//    public var posts: [Post] = []
+//    public var isPicked: Bool = false
+//}
 
 struct Post {
     var text: String
     var image: Data?
+	var url: String
     var isPicked: Bool
 }

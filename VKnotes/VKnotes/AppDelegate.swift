@@ -14,6 +14,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     static let defaults = UserDefaults.standard
+	
+	var categories: [Category] = []
     
 
 

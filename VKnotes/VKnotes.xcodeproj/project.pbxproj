@@ -21,7 +21,9 @@
 		09BC5962238026EF00FD0566 /* PostsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BC5961238026EF00FD0566 /* PostsTableViewCell.swift */; };
 		09BC59642380270A00FD0566 /* PostModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BC59632380270A00FD0566 /* PostModel.swift */; };
 		09BC596623802AAD00FD0566 /* WebCasheCleaner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BC596523802AAD00FD0566 /* WebCasheCleaner.swift */; };
+		09BC596A23806CD400FD0566 /* DataBaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BC596923806CD400FD0566 /* DataBaseModel.swift */; };
 		A7495DC1238031F800B79F28 /* PostWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7495DC0238031F800B79F28 /* PostWebViewController.swift */; };
+		A7495DCB23809B0100B79F28 /* NetWork.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7495DCA23809B0100B79F28 /* NetWork.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,7 +43,9 @@
 		09BC5961238026EF00FD0566 /* PostsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostsTableViewCell.swift; sourceTree = "<group>"; };
 		09BC59632380270A00FD0566 /* PostModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostModel.swift; sourceTree = "<group>"; };
 		09BC596523802AAD00FD0566 /* WebCasheCleaner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebCasheCleaner.swift; sourceTree = "<group>"; };
+		09BC596923806CD400FD0566 /* DataBaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBaseModel.swift; sourceTree = "<group>"; };
 		A7495DC0238031F800B79F28 /* PostWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostWebViewController.swift; sourceTree = "<group>"; };
+		A7495DCA23809B0100B79F28 /* NetWork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWork.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,13 +87,15 @@
 				09849B52237FF9FF00DCA145 /* PostTableViewController.swift */,
 				09BC5961238026EF00FD0566 /* PostsTableViewCell.swift */,
 				09BC59632380270A00FD0566 /* PostModel.swift */,
+				09BC596923806CD400FD0566 /* DataBaseModel.swift */,
 				093D8AA5237FF1D100330693 /* EnterViewController.swift */,
 				09BC595B2380011C00FD0566 /* SettingsViewController.swift */,
 				09BC596523802AAD00FD0566 /* WebCasheCleaner.swift */,
+				A7495DC0238031F800B79F28 /* PostWebViewController.swift */,
 				09847578237FF08F008806D1 /* Assets.xcassets */,
 				0984757A237FF08F008806D1 /* LaunchScreen.storyboard */,
 				0984757D237FF08F008806D1 /* Info.plist */,
-				A7495DC0238031F800B79F28 /* PostWebViewController.swift */,
+				A7495DCA23809B0100B79F28 /* NetWork.swift */,
 			);
 			path = VKnotes;
 			sourceTree = "<group>";
@@ -174,9 +180,11 @@
 				A7495DC1238031F800B79F28 /* PostWebViewController.swift in Sources */,
 				09849B4F237FF9E700DCA145 /* CategoriesViewController.swift in Sources */,
 				09BC5962238026EF00FD0566 /* PostsTableViewCell.swift in Sources */,
+				09BC596A23806CD400FD0566 /* DataBaseModel.swift in Sources */,
 				09BC595C2380011C00FD0566 /* SettingsViewController.swift in Sources */,
 				09BC5960238026CD00FD0566 /* CategoryTableViewCell.swift in Sources */,
 				09BC59642380270A00FD0566 /* PostModel.swift in Sources */,
+				A7495DCB23809B0100B79F28 /* NetWork.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

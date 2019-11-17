@@ -12,10 +12,10 @@ class PostTableViewController: UIViewController, UITableViewDataSource, UITableV
 	
 	var tableView = UITableView()
 	
-	var postsInCategories = PostModel.shared
+	var postsInCategories: [Note] = []
+	var posts : [String: Note]? = [:]
 	
-	//    var posts : [String] = []
-	
+	var index = 0
 	var pick = 0
 	
 	init() {
@@ -28,11 +28,14 @@ class PostTableViewController: UIViewController, UITableViewDataSource, UITableV
 		fatalError("init(coder:) has not been implemented")
 	}
 	
+	override func viewWillAppear(_ animated: Bool) {
+		postsInCategories = Array(posts!.values)
+		tableView.reloadData()
+	}
+	
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		
-		postsInCategories.posts = [Post(text: "first", image: nil, isPicked: false)]
 		
 		self.view.backgroundColor = .white
 		
@@ -40,18 +43,10 @@ class PostTableViewController: UIViewController, UITableViewDataSource, UITableV
 		tableView.delegate = self
 		tableView.dataSource = self
 		
-		//        tableView.register(UITableViewCell.self.self, forCellReuseIdentifier: "posts")
 		tableView.register(PostsTableViewCell.self, forCellReuseIdentifier: PostsTableViewCell.reuseId)
 		
 		tableView.tableFooterView = UIView()
-		
-		let backImage = UIImageView(image: UIImage(named: "back_2"))
-		backImage.frame = self.tableView.frame
-		backImage.contentMode = .scaleAspectFill
-		self.tableView.backgroundView = backImage
-		
 		view.addSubview(tableView)
-		// Do any additional setup after loading the view.
 		
 		let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPost))
 		let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editList))
@@ -73,16 +68,17 @@ class PostTableViewController: UIViewController, UITableViewDataSource, UITableV
 			
 			let textField = addTaskAllert.textFields![0] as UITextField
 			
-			guard let text = textField.text else {
-				return
-			}
+			guard let text = textField.text else { return }
 			
-			let post = Post(text: textField.text!, image: nil, isPicked: false)
+			let note = Note(title: text, url: "url0", isPicked: false)
 			
-			self.postsInCategories.posts.append(post)
-			//            self.posts.append(text)
+			self.postsInCategories.append(note)
 			
-			self.tableView.reloadData()
+			let t = AppDelegate.shared.categories[self.index].notes![""]
+			let noteForUpload = ["note\(self.postsInCategories.count - 1)" : note]
+			let p = AppDelegate.shared.categories[self.index].notes![""]
+			let posts = (AppDelegate.shared.categories[self.index].notes)?["note\(self.postsInCategories.count - 1)"]
+			self.loadToServer()
 		}
 		
 		addTaskAllert.addAction(cancelAction)
@@ -91,32 +87,49 @@ class PostTableViewController: UIViewController, UITableViewDataSource, UITableV
 		tableView.reloadData()
 	}
 	
+	func loadToServer() {
+		let posts = AppDelegate.shared.categories
+		uploadPosts(posts) {
+			result in
+			if result {
+				DispatchQueue.main.async {
+					self.tableView.reloadData()
+				}
+			}
+		}
+	}
+	
 	@objc
 	private func editList() {
 		tableView.setEditing(!tableView.isEditing, animated: true)
 		navigationItem.leftBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit"
+	}
+	
+	override func viewWillDisappear(_ animated: Bool) {
+		super.viewWillDisappear(animated)
+		
+		//		loadToServer()
 	}
 }
 
 //MARK: - protocols
 extension PostTableViewController {
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return postsInCategories.posts.count//posts.count
+		return postsInCategories.count
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: PostsTableViewCell.reuseId, for: indexPath) as! PostsTableViewCell
 		
-		let post = postsInCategories.posts[indexPath.row]
+		let post = postsInCategories[indexPath.row]
 		
-		cell.noteLabel.text = post.text //posts[indexPath.row]
-		print("cell indexPath: ", indexPath)
-		cell.noteImage.isHidden = !post.isPicked
+		cell.noteLabel.text = post.title
+		
+		cell.noteImage.isHidden = post.isPicked
 		
 		print("---------------")
-		print("posts", postsInCategories.posts)
+		print("posts", postsInCategories)
 		cell.accessoryType = .disclosureIndicator
-		cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
 		
 		return cell
 	}
@@ -124,8 +137,9 @@ extension PostTableViewController {
 	func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
 		
 		if editingStyle == .delete {
-			postsInCategories.posts.remove(at: indexPath.row)
-			
+			postsInCategories.remove(at: indexPath.row)
+			(AppDelegate.shared.categories[self.index].notes)!["note\(indexPath.row)"] = nil
+			loadToServer()
 			tableView.reloadData()
 		}
 	}
@@ -139,7 +153,8 @@ extension PostTableViewController {
 		cell?.isSelected = false
 		
 		let postsVC = PostWebViewController()
-		postsVC.title = postsInCategories.posts[indexPath.row].text
+		postsVC.title = postsInCategories[indexPath.row].title
+		postsVC.urlOfPost = postsInCategories[indexPath.row].url
 		
 		navigationController?.pushViewController(postsVC, animated: true)
 	}
@@ -150,20 +165,22 @@ extension PostTableViewController {
 		let tickAction = UIContextualAction(style: .normal, title:  "Close", handler: { (ac: UIContextualAction, view: UIView, success: (Bool) -> Void) in
 			print("indexPath", indexPath)
 			
-			let posts = self.postsInCategories.posts
-			if !self.postsInCategories.posts[indexPath.row].isPicked {
+			let isPostPicked = self.postsInCategories[indexPath.row].isPicked ?? false
+			
+			if isPostPicked{
 				
-				self.postsInCategories.posts[indexPath.row].isPicked = !self.postsInCategories.posts[indexPath.row].isPicked
-				
+				self.postsInCategories[indexPath.row].isPicked = !isPostPicked
 				self.pickPost(numbOfPickPost: indexPath.row)
 			} else {
-				let t = self.postsInCategories.posts[indexPath.row].isPicked
-				print(t)
-				self.postsInCategories.posts[indexPath.row].isPicked = !self.postsInCategories.posts[indexPath.row].isPicked
-				print(self.postsInCategories.posts[indexPath.row].isPicked)
-				self.postsInCategories.posts = self.postsInCategories.posts.sorted {$0.text < $1.text}
+				self.postsInCategories[indexPath.row].isPicked = !isPostPicked
+				//				print(self.postsInCategories[indexPath.row].isPicked)
+				self.postsInCategories = self.postsInCategories.sorted {$0.title < $1.title}
 				tableView.reloadData()
 			}
+			print(self.postsInCategories)
+			(AppDelegate.shared.categories[self.index].notes)!["note\(indexPath.row)"] = self.postsInCategories[indexPath.row]
+			
+			self.loadToServer()
 			
 			success(true)
 		})
@@ -179,9 +196,9 @@ extension PostTableViewController {
 	func pickPost(numbOfPickPost : Int) {
 		
 		for index in stride(from: numbOfPickPost, to: pick, by: -1) {
-			let t = self.postsInCategories.posts[index]
-			self.postsInCategories.posts[index] = self.postsInCategories.posts[index - 1]
-			self.postsInCategories.posts[index - 1] = t
+			let t = self.postsInCategories[index]
+			self.postsInCategories[index] = self.postsInCategories[index - 1]
+			self.postsInCategories[index - 1] = t
 		}
 		
 		pick += 1

@@ -18,17 +18,17 @@ class EnterViewController: UIViewController, WKNavigationDelegate {
         signInButton.center = CGPoint(x: view.center.x, y: view.center.y)
         view.addSubview(signInButton)
         
-//        webVkAuth.frame = view.frame
-//        if let url = URL(string: "https://oauth.vk.com/authorize?client_id=7210663&display=page&response_type=token&state=login") {
-//            let request = URLRequest(url: url)
-//            let config = WKWebViewConfiguration()
-//            config.userContentController.add(self, name: "setToken")
-//            webVkAuth.load(request)
-//        }
-//        view.addSubview(webVkAuth)
-//
-//        
-//        AppDelegate.defaults.set(true, forKey: "loggedIn")
+        webVkAuth.frame = view.frame
+        if let url = URL(string: "https://oauth.vk.com/authorize?client_id=7210663&display=page&response_type=token&state=login") {
+            let request = URLRequest(url: url)
+            let config = WKWebViewConfiguration()
+            config.userContentController.add(self, name: "setToken")
+            webVkAuth.load(request)
+        }
+        view.addSubview(webVkAuth)
+
+        
+     AppDelegate.defaults.set(true, forKey: "loggedIn")
 //        AppDelegate.shared.rootViewController.switchToMainScreen()
     }
     
